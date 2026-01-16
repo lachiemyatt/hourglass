@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lachiemyatt-hourglass"
+version = "0.2.0"
+description = "Full-screen terminal dashboard for day/year/life progress"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [{name = "Lachlan Myatt"}]
+
+[project.scripts]
+hourglass = "hourglass.cli:main"
+
+[tool.setuptools]
+packages = ["hourglass"]
