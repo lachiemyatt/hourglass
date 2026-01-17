@@ -39,6 +39,20 @@ def _format_dhms(delta: timedelta) -> str:
     return f"{days}d {hours:02d}:{minutes:02d}:{seconds:02d}"
 
 
+def format_hms_seconds(seconds: int) -> str:
+    total = max(0, int(seconds))
+    hours = total // 3600
+    minutes = (total % 3600) // 60
+    secs = total % 60
+    return f"{hours:02d}:{minutes:02d}:{secs:02d}"
+
+
+def format_remaining(delta: timedelta) -> str:
+    if delta.total_seconds() >= 86400:
+        return _format_dhms(delta)
+    return _format_hms(delta)
+
+
 def _clamp_day(year: int, month: int, day: int) -> int:
     last = calendar.monthrange(year, month)[1]
     return min(day, last)
@@ -127,3 +141,16 @@ def life_info(dob: date, now: Optional[datetime] = None, lifespan_years: int = 8
     end = add_years(start, lifespan_years)
     remaining = end - now
     return TimeInfo(start=start, end=end, now=now, progress=_progress(now, start, end), remaining_str=_format_ymdhms(now, end))
+
+
+def deadline_info(set_time: datetime, target_time: datetime, now: Optional[datetime] = None) -> TimeInfo:
+    if now is None:
+        now = datetime.now().astimezone()
+    remaining = target_time - now
+    return TimeInfo(
+        start=set_time,
+        end=target_time,
+        now=now,
+        progress=_progress(now, set_time, target_time),
+        remaining_str=format_remaining(remaining),
+    )
